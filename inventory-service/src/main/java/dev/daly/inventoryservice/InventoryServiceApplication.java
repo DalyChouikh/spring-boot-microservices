@@ -23,10 +23,10 @@ public class InventoryServiceApplication {
             inventory1.setSkuCode("iphone_13");
             inventory1.setQuantity(10);
             Inventory inventory2 = new Inventory();
-            inventory2.setSkuCode("iphone_13_pro");
+            inventory2.setSkuCode("iphone_14");
             inventory2.setQuantity(5);
             Inventory inventory3 = new Inventory();
-            inventory3.setSkuCode("iphone_13_pro_max");
+            inventory3.setSkuCode("iphone_14_pro");
             inventory3.setQuantity(0);
 
             inventoryRepository.saveAll(List.of(inventory1, inventory2, inventory3));
