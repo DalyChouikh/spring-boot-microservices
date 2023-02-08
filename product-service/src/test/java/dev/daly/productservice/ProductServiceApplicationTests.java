@@ -26,8 +26,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class ProductServiceApplicationTests {
 
-//    @Container
-//    private static final MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:4.4.2");
+    @Container
+    private static final MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:6.0.4");
 
     @Autowired
     private MockMvc mockMvc;
@@ -37,26 +37,26 @@ class ProductServiceApplicationTests {
     private ProductRepository productRepository;
 
 
-//    @DynamicPropertySource
-//    static void setProperties(DynamicPropertyRegistry registry) {
-//        registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
-//    }
-//    @Test
-//    void shouldCreateProduct() throws Exception {
-//        ProductRequest productRequest = getProductRequest();
-//        String productRequestString = objectMapper.writeValueAsString(productRequest);
-//        mockMvc.perform(MockMvcRequestBuilders.post("/api/product")
-//                .contentType("application/json")
-//                .content(productRequestString))
-//                .andExpect(status().isCreated());
-//        Assertions.assertEquals(1, productRepository.findAll().size());
-//    }
+    @DynamicPropertySource
+    static void setProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
+    }
+    @Test
+    void shouldCreateProduct() throws Exception {
+        ProductRequest productRequest = getProductRequest();
+        String productRequestString = objectMapper.writeValueAsString(productRequest);
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/product")
+                .contentType("application/json")
+                .content(productRequestString))
+                .andExpect(status().isCreated());
+        Assertions.assertEquals(1, productRepository.findAll().size());
+    }
 
-//    @Test
-//    void shouldGetProduct() throws Exception {
-//        mockMvc.perform(MockMvcRequestBuilders.get("/api/product"))
-//                .andExpect(status().isOk());
-//    }
+    @Test
+    void shouldGetProduct() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/product"))
+                .andExpect(status().isOk());
+    }
 
     private ProductRequest getProductRequest() {
         return ProductRequest.builder()
