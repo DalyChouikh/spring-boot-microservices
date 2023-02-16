@@ -3,10 +3,12 @@ package dev.daly.orderservice.service;
 import dev.daly.orderservice.dto.InventoryResponse;
 import dev.daly.orderservice.dto.OrderLineItemsDto;
 import dev.daly.orderservice.dto.OrderRequest;
+import dev.daly.orderservice.event.OrderPlacedEvent;
 import dev.daly.orderservice.model.Order;
 import dev.daly.orderservice.model.OrderLineItems;
 import dev.daly.orderservice.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -22,6 +24,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final WebClient.Builder webClientBuilder;
+    private final KafkaTemplate<String, OrderPlacedEvent> kafkaTemplate;
 
     public String placeOrder(OrderRequest orderRequest) {
         Order order = new Order();
@@ -45,6 +48,7 @@ public class OrderService {
 
         if (allProductsInStock) {
             orderRepository.save(order);
+            kafkaTemplate.send("notificationTopic", new OrderPlacedEvent(order.getOrderNumber()));
             return "Order placed successfully.";
         } else {
             throw new IllegalArgumentException("Product out of stock, Please try again later");
